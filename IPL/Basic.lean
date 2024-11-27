@@ -42,7 +42,6 @@ theorem lem21 (B : Set Rule) (P U : Finset Nat) (q : Nat) : AtDer (B, P, q) -> A
     rw [<-hqIsq] at hqInP
     exact hqInP
   | App hB hP hq hR hRinhB hAtseq hAtseqInR hDer i =>
-    simp [hArgs] at *
     sorry
 /-
 example (B : Set Rule) (P U : Finset Nat) (q : Nat) : AtDer (B, P, q) -> AtDer (B, P ∪ U, q) := by
