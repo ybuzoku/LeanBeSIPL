@@ -21,38 +21,28 @@ structure Rule where
   seq : Finset AtSeq
   conc : Nat
 
-inductive AtDer : (Set Rule × Finset Nat × Nat) -> Prop where
-  | Ref (B : Set Rule) (S : Finset Nat) (p : Nat) : p ∈ S → AtDer (B, S, p)
-  | App (B : Set Rule) (S : Finset Nat) (r : Nat) (R : Rule) : R ∈ B → (R.conc = r) -> (∀ seq ∈ R.seq, AtDer (B, seq.hypo ∪ S, seq.conc)) → AtDer (B, S, r)
+inductive AtDer : Set Rule -> Finset Nat -> Nat -> Prop where
+  | Ref (B : Set Rule) (S : Finset Nat) (p : Nat) : p ∈ S → AtDer B S p
+  | App (B : Set Rule) (S : Finset Nat) (r : Nat) (R : Rule) : R ∈ B → (R.conc = r) → (∀ seq ∈ R.seq, AtDer B (seq.hypo ∪ S) seq.conc) → AtDer B S r
 
-theorem lem21 (B : Set Rule) (P U : Finset Nat) (q : Nat) : AtDer (B, P, q) -> AtDer (B, P ∪ U, q) := by
+theorem lem21 (B : Set Rule) (P U : Finset Nat) (q : Nat) : AtDer B P q -> AtDer B (P ∪ U) q := by
   intro hAtDer
-  generalize hArgs : (B, P, q) = args
-  rw [hArgs] at hAtDer
   induction hAtDer with
-  | Ref hB hP hq hqInhP =>
+  | Ref =>
     apply AtDer.Ref
     simp
-    simp at hArgs
-    obtain ⟨hBisB, t⟩ := hArgs
-    obtain ⟨hPisP, hqIsq⟩ := t
     left
-    rw [<-hPisP] at hqInhP
-    rw [<-hqIsq] at hqInhP
-    exact hqInhP
-  | App hB hP hr hR hRinhB hConcIshr hAders i =>
-    simp at hArgs
-    obtain ⟨hBisB, t⟩ := hArgs
-    obtain ⟨hPisP, hqIsq⟩ := t
+    trivial
+  | App _ _ _ _ _ hDers i =>
+    simp [hDers] at i
     apply AtDer.App
-    . sorry
-    . sorry
-    . sorry
-    . exact hR
+    . trivial
+    . trivial
+    . trivial
 
 
 theorem lem22 (B : Set Rule) (S L : Finset Nat) (p : Nat) :
-  AtDer (B, S, p) <-> ∀C ⊇ B, ∀ s ∈ S, AtDer (C, ∅, s) -> AtDer (C, ∅, p) := by
+  AtDer B S p <-> ∀C ⊇ B, ∀ s ∈ S, AtDer C ∅ s -> AtDer C ∅ p := by
   apply Iff.intro
   . intro h
     sorry
