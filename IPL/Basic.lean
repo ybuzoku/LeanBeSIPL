@@ -42,9 +42,26 @@ theorem lem21 (B : Set Rule) (P U : Finset Nat) (q : Nat) : AtDer B P q -> AtDer
 
 
 theorem lem22 (B : Set Rule) (S L : Finset Nat) (p : Nat) :
-  AtDer B S p <-> ∀C ⊇ B, ∀ s ∈ S, AtDer C ∅ s -> AtDer C ∅ p := by
+  AtDer B S p <-> ∀ C ⊇ B, (∀ s ∈ S, AtDer C ∅ s) -> AtDer C ∅ p := by
   apply Iff.intro
   . intro h
-    sorry
+    intro C
+    intro C_Ext_B
+    intro all_s_axiom_deriv
+    induction h with
+    | Ref hS hp p_in_S =>
+      apply all_s_axiom_deriv
+      trivial
+    | App hS hp hR hR_in_B hR_conc_is_hp iDers ih =>
+      apply
+      sorry
   . intro h
     sorry
+
+theorem rulesInExtension (B: Set Rule) :
+  ∀ X ⊇ B, ∀ x, x ∈ B -> x ∈ X := by
+  intro C
+  intro baseGeq
+  intro R
+  intro RinB
+  exact baseGeq RinB
